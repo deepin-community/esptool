@@ -1,0 +1,9 @@
+ACTION!="add|change", GOTO="esptool_end"
+
+# /dev/ttyUSB
+SUBSYSTEMS=="usb-serial", TAG+="uaccess"
+
+# /dev/ttyACM
+SUBSYSTEMS=="usb", DRIVERS=="cdc_acm", TAG+="uaccess"
+
+LABEL="esptool_end"

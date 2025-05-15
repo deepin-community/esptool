@@ -1,0 +1,3 @@
+# the udev rule is rather generic by design and does not provide specific IDs
+# also see https://github.com/espressif/esptool/issues/125
+esptool: appstream-metadata-missing-modalias-provide *

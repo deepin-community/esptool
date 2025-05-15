@@ -1,0 +1,64 @@
+[EXAMPLES]
+Display device features, SPI flash manufacturer and device ID:
+.IP "" 4
+.EX
+esptool flash_id
+.EE
+.PP
+Flash ESP8266 Espressif AT v1.6.2 firmware to ESP-WROOM-02 board:
+.IP "" 4
+.EX
+esptool write_flash \-\-flash_mode dio \-\-flash_size 4MB\-c1 0x00 boot_v1.7.bin 0x1000 at/1024+1024/user1.2048.new.5.bin 0xfe000 blank.bin 0x3fc000 esp_init_data_default_v08.bin 0x3fe000 blank.bin
+.EE
+.PP
+Flash ESP32 Espressif AT v1.1.1 firmware to ESP-WROOM-32 board:
+.IP "" 4
+.EX
+esptool write_flash \-\-flash_mode dio \-\-flash_freq 40m \-\-flash_size detect 0x1000 bootloader/bootloader.bin 0x20000 at_customize.bin 0x21000 customized_partitions/ble_data.bin 0x24000 customized_partitions/server_cert.bin 0x26000 customized_partitions/server_key.bin 0x28000 customized_partitions/server_ca.bin 0x2a000 customized_partitions/client_cert.bin 0x2c000 customized_partitions/client_key.bin 0x2e000 customized_partitions/client_ca.bin 0xf000 phy_init_data.bin 0x100000 esp\-at.bin 0x8000 partitions_at.bin
+.EE
+.PP
+Display ESP32 efuse state summary:
+.IP "" 4
+.EX
+espefuse \-\-port /dev/ttyUSB0 summary
+.EE
+.PP
+Generate a flash encryption key:
+.IP "" 4
+.EX
+espsecure generate_flash_encryption_key key.bin
+.EE
+.PP
+Burn the key to the device (WARNING: one time only operation):
+.IP "" 4
+.EX
+espefuse \-\-port /dev/ttyUSB1 burn_key flash_encryption key.bin
+.EE
+.PP
+Encrypt flash data:
+.IP "" 4
+.EX
+espsecure encrypt_flash_data \-\-keyfile key.bin \-\-address 0x10000 \-o my\-app\-encrypted.bin my\-app.bin
+.EE
+[REPORTING BUGS]
+Review: <https://github.com/espressif/esptool/#troubleshooting>
+.br
+Known issues: <https://github.com/espressif/esptool/issues>
+.br
+Report new issues at: <https://github.com/espressif/esptool/issues/new>
+[AUTHOR]
+Esptool.py was started by Fredrik Ahlberg as an unofficial community project, 
+currently maintained by Angus Gratton and supported by Espressif Systems 
+(Shanghai) PTE LTD. This manual page has been produced by Milan Kupcevic 
+<milan@debian.org> for the Debian project and can be used by others.
+[COPYRIGHT]
+Copyright \(co 2014-2017 Fredrik Ahlberg, Angus Gratton, 
+Espressif Systems (Shanghai) PTE LTD, other contributors as noted.
+License GPLv2+: GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+[SEE ALSO]
+.PP
+.BR esptool (1),
+.BR espefuse (1),
+.BR espsecure (1)

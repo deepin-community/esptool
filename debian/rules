@@ -1,4 +1,89 @@
 #!/usr/bin/make -f
 
+include /usr/share/dpkg/pkg-info.mk
+
+export PYBUILD_NAME=esptool
+
+UPSTREAM_VERSION = ${DEB_VERSION_UPSTREAM:+dfsg=}
+
 %:
-	dh $@
+	dh $@ --buildsystem=pybuild
+
+execute_after_dh_auto_install:
+	mv debian/esptool/usr/bin/esptool.py debian/esptool/usr/bin/esptool
+	mv debian/esptool/usr/bin/espefuse.py debian/esptool/usr/bin/espefuse
+	mv debian/esptool/usr/bin/espsecure.py debian/esptool/usr/bin/espsecure
+	dh_installexamples debian/esptool/usr/bin/esp_rfc2217_server.py
+	rm -f debian/esptool/usr/bin/esp_rfc2217_server.py
+
+execute_before_dh_auto_build:
+	# uscan removes this entire directory through Files-Excluded
+	mkdir esptool/targets/stub_flasher/
+	# Build the stubs using the following options:
+	# * Workaround "/usr/bin/env python" shebang in wrap_stub.py
+	# * Disable ESP32 Xtensa stubs as we don't have toolchains for these
+	# * Use the gcc/picolibc as found in Debian for ESP32 RISC-V chips
+	# * Enable verbose mode
+	make -C flasher_stub install \
+	  WRAP_STUB="python3 wrap_stub.py" \
+	  WITHOUT_ESP32_XTENSA=1 \
+	  CROSS_ESPRISCV32=riscv64-unknown-elf- \
+	  EXTRA_CFLAGS_ESPRISCV32=-specs=picolibc.specs \
+	  V=1
+
+override_dh_python3:
+	# for python3-pkcs11, used by espsecure's HSM signing function
+	dh_python3 --suggests-section=hsm
+
+ifeq (,$(findstring nodoc,$(DEB_BUILD_OPTIONS) $(DEB_BUILD_PROFILES)))
+execute_after_dh_auto_build: export PYTHONSAFEPATH=1
+execute_after_dh_auto_build: export PYTHONPATH=$(shell pybuild --print build_dir --interpreter python3)
+execute_after_dh_auto_build: PYTHON_SCRIPT_PATH=build/scripts-$(shell py3versions -v --max-supported)
+execute_after_dh_auto_build:
+	help2man --no-info --section 1 --include=debian/see-also \
+	  --source="Esptool.py $(UPSTREAM_VERSION)" \
+	  -n "ESP8266 and ESP32 ROM Bootloader Utility" \
+	  --version-string="$(UPSTREAM_VERSION)" \
+	  $(PYTHON_SCRIPT_PATH)/esptool.py \
+	  | sed -e "s,esptool.py,esptool," \
+	  -e "s,Esptool.py,esptool.py," \
+	  -e "s,esptool v[0-9]\+.*,," \
+	  -e "s,\[.*\],," \
+	  -e "s,sage: esptool,sage: esptool [OPTION] COMMAND," \
+	  -e "s,positional arguments,command arguments," \
+	  -e "s,\.\.\.,," \
+	  -e "s,{load.*version},," \
+	  -e "s/{auto,.*}/{auto,CHIP}/" \
+	  -e "s/\\\fR {.*},/,/" \
+	  > esptool.1
+	help2man --no-info --section 1 --include=debian/see-also \
+	  --source="Esptool.py $(UPSTREAM_VERSION)" \
+	  -n "ESP32 Secure Boot & Flash Encryption tool" \
+	  --version-string="$(UPSTREAM_VERSION)" \
+	  $(PYTHON_SCRIPT_PATH)/espsecure.py \
+	  | sed -e "s,espsecure.py,espsecure," \
+	  -e "s,Esptool.py,esptool.py," \
+	  -e "s,espsecure v[0-9]\+.*,," \
+	  -e "s,\[.*\],," \
+	  -e "s,sage: espsecure,sage: espsecure [OPTION] COMMAND," \
+	  -e "s,positional arguments,command arguments," \
+	  -e "s,\.\.\.,," \
+	  -e "s,{digest.*data},," \
+	  > espsecure.1
+	help2man --no-info --section 1 --include=debian/see-also \
+	  --source="Esptool.py $(UPSTREAM_VERSION)" \
+	  -n "ESP32 efuse get/set tool" \
+	  --version-string="$(UPSTREAM_VERSION)" \
+	  $(PYTHON_SCRIPT_PATH)/espefuse.py \
+	  | sed -e "s,espefuse.py,espefuse," \
+	  -e "s,Esptool.py,esptool.py," \
+	  -e "s,espefuse v[0-9]\+.*,," \
+	  -e "s,\[.*\],," \
+	  -e "s,sage: espefuse,sage: espefuse [OPTION] COMMAND," \
+	  -e "s,positional arguments,command arguments," \
+	  -e "s,\.\.\.,," \
+	  -e "s,{dump.*_mac},," \
+	  -e "/^{burn_efuse,[^}]*}/d" \
+	  -e "s/{auto,.*}/{auto,CHIP}/" \
+	  > espefuse.1
+endif
