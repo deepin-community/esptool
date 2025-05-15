@@ -1,0 +1,20 @@
+esptool for Debian
+------------------
+
+The package does not currently ship the binary flasher stub code for the Xtensa
+ESP32 chips (ESP32, ESP32-S2 and ESP32-S3), as there is no compiler and libc
+for this architecture present in Debian. As a result, several esptool features,
+such as higher baud rates, or erasing flash contents, will not work on these
+chips. Note that stubs are shipped for the confusingly similarly named RISC-V
+ESP32 chips, such as the ESP32-C2, ESP32-C3, ESP32-C6, ESP32-H2 (as well as the
+ESP8266), however.
+
+The upstream project ships precompiled binaries using Espressif's proprietary
+toolchain and SDK (ESP-IDF) for all chips, which however cannot be shipped in
+Debian "main" due to the Debian Free Software Guidelines.
+
+For more information about the flasher_stub, please refer to the upstream
+esptool documentation:
+https://docs.espressif.com/projects/esptool/en/latest/esp32/esptool/flasher-stub.html
+
+ -- Faidon Liambotis <paravoid@debian.org>  Tue Feb 28 03:33:27 2023 +0200

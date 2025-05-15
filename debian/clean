@@ -1,0 +1,11 @@
+# remove the egg
+esptool.egg-info/
+
+# remove manpages (they may not exist if we built with "nodoc")
+esptool.1
+espefuse.1
+espsecure.1
+
+# remove both the stub's build and install path
+flasher_stub/build/
+esptool/targets/stub_flasher/

@@ -1,0 +1,14 @@
+# smoke test the tools themselves
+Test-Command: esptool --help | grep ^usage
+Restrictions: superficial
+Features: test-name=smoke-esptool
+
+Test-Command: espefuse --help | grep ^usage
+Restrictions: superficial
+Features: test-name=smoke-espefuse
+
+Test-Command: espsecure --help | grep ^usage
+Restrictions: superficial
+Features: test-name=smoke-espsecure
+
+# also see the Testsuite field in d/control

@@ -1,5 +1,138 @@
-template-repository (1.0-1) unstable; urgency=medium
+esptool (4.7.0+dfsg-0.1) unstable; urgency=medium
 
-  * Initial release
+  * Non-maintainer upload.
+  * New upstream release.
+    - Add new build dependency python3-intelhex. 
 
- -- Tsic404 <liuheng@deepin.org>  Sat, 28 Jan 2023 13:46:49 +0800
+ -- Faidon Liambotis <paravoid@debian.org>  Fri, 26 Jan 2024 14:31:42 +0200
+
+esptool (4.6.2+dfsg-0.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * New upstream version.
+    - Drop flasher_stub patches, merged upstream (PR #856, #858),
+      adjust debian/rules to the new upstream functionality.
+    - Add dependency on python3-yaml, new since v4.6.
+  * d/copyright: add link to a newly filed upstream issue for sourceless
+    binaries in the upstream source package.
+  * Release the new 4.x series to unstable.
+
+ -- Faidon Liambotis <paravoid@debian.org>  Fri, 14 Jul 2023 01:05:45 +0300
+
+esptool (4.5.1+dfsg-0.1) experimental; urgency=medium
+
+  * Non-maintainer upload.
+  * New upstream release. (Closes: #983719)
+    - Update debian/copyright to match upstream changes.
+    - Update build dependencies: drop python3-pyaes, and add
+      python3-bitstring, python3-cryptography, python3-reedsolo and
+      python3-pkcs11.
+  * Compile and ship the flasher stub for ESP8266, as well as the ESP32 RISC-V
+    variants (currently ESP32-C2, ESP32-C3, ESP32-C6, ESP32-H2). Notably, this
+    does not include the ESP32 Xtensa variants (ESP32, ESP32-S2 and ESP32-S3)
+    as there is no working toolchain in Debian for these. (Closes: #948096)
+  * While the full test suite is stripped out and cannot be executed, add a
+    few superficial autopkgtests: an autodep8 one, as well as smoke tests by
+    running --help in the target environment.
+  * Various package hygiene changes:
+    - Revamp the build process to use dh-python, pybuild and setuptools to
+      build and install the binaries. This means we now ship the "esptool"
+      Python module for other packages to use. (Closes: #973031)
+    - Drop upstream patch "shebang", as that is not necessary with pybuild.
+    - Add Rules-Requires-Root: no, to indicate that the package does not need
+      root to build.
+    - Drop debian/NEWS, as it only included a news item for a version older
+      than oldstable.
+    - Add support for the "nodoc" build profile.
+    - Add upstream metadata.
+    - Bump debhelper compatibility level from 10 to 13.
+    - Bump Standards-Version to 4.6.2.
+    - Add gbp.conf and switch to DEP-14 branch naming.
+  * Stop shipping CONTRIBUTING.md and its respective .html. Contributors are
+    encouraged to look in the upstream GitHub repository for the latest
+    information on how to contribute to the upstream project.
+
+ -- Faidon Liambotis <paravoid@debian.org>  Fri, 17 Mar 2023 14:03:23 +0200
+
+esptool (2.8+dfsg-1) sid; urgency=medium
+
+  * new upstream release
+  * update debian/copyright
+  * update standards version to 4.5.0
+
+ -- Milan Kupcevic <milan@debian.org>  Sat, 08 Feb 2020 11:05:01 -0500
+
+esptool (2.6+dfsg-1) sid; urgency=medium
+
+  * new upstream release (closes: #922787)
+
+ -- Milan Kupcevic <milan@debian.org>  Mon, 11 Mar 2019 13:10:15 -0400
+
+esptool (2.5.1+dfsg-3) sid; urgency=medium
+
+  * update standards version to 4.3.0
+  * add udev rules
+
+ -- Milan Kupcevic <milan@debian.org>  Sun, 23 Dec 2018 23:51:11 -0500
+
+esptool (2.5.1+dfsg-2) sid; urgency=medium
+
+  * update man page copyright notice
+
+ -- Milan Kupcevic <milan@debian.org>  Fri, 21 Dec 2018 08:20:07 -0500
+
+esptool (2.5.1+dfsg-1) sid; urgency=medium
+
+  [ Milan Kupcevic ]
+  * new upstream release
+  * update standards version to 4.2.1
+
+  [ Ondřej Nový ]
+  * d/copyright: Use https protocol in Format field
+  * d/control: Remove trailing whitespaces
+
+ -- Milan Kupcevic <milan@debian.org>  Thu, 20 Dec 2018 21:16:47 -0500
+
+esptool (2.5.0+dfsg-1) sid; urgency=low
+
+  * New upstream release. (Closes: #906062)
+    - update debian/copyright
+  * Use discount instead of markdown.
+  * Move package maintenance repository to salsa.
+  * Update standards version to 4.2.0. No changes.
+  * Update man page examples.
+
+ -- Milan Kupcevic <milan@debian.org>  Sun, 26 Aug 2018 23:08:04 -0400
+
+esptool (2.1+dfsg1-2) sid; urgency=medium
+
+  * Add package maintenance Vcs-* fields
+  * Switch to python3
+  * Add usage examples to the man pages
+
+ -- Milan Kupcevic <milan@debian.org>  Sun, 05 Nov 2017 18:10:33 -0500
+
+esptool (2.1+dfsg1-1) sid; urgency=medium
+
+  * New upstream release
+    - python based full support for ESP32 and ESP8266 chips
+  * Disable flasher stub option due to DFSG removed binary blob
+
+ -- Milan Kupcevic <milan@debian.org>  Tue, 24 Oct 2017 01:12:50 -0400
+
+esptool (0.4.12-1) sid; urgency=medium
+
+  * New upstream release.
+    - Remove ESP32 support
+  * Set package priority to optional.
+  * Update standards version to 4.1.1. No changes.
+  * Bump debhelper compatibility up to 10.
+  * Also build on GNU/Hurd and GNU/kFreeBSD
+
+ -- Milan Kupcevic <milan@debian.org>  Tue, 17 Oct 2017 22:29:14 -0400
+
+esptool (0.4.6-1) unstable; urgency=medium
+
+  * Initial release. (Closes: #811905)
+
+ -- Milan Kupcevic <milan@debian.org>  Sun, 14 Feb 2016 19:55:50 -0500
